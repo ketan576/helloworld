@@ -2,7 +2,7 @@
 title: "Analysis Comparison"
 author: "Ke Tan"
 date: "10/1/2020"
-output: rmarkdown::github_document
+output: github_document
 ---
 
 # R, load two clean matrix, join together, and then plot
