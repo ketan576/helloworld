@@ -1,15 +1,7 @@
----
-title: "Analysis Comparison"
-author: "Ke Tan"
-date: "10/1/2020"
-output: 
-  md_document:
-    variant: markdown_github
----
+R, load two clean matrix, join together, and then plot
+======================================================
 
-# R, load two clean matrix, join together, and then plot
-
-```{r echo=TRUE, out.height=50, out.width=50}
+``` r
 for (i in 8:9){
   KeArray = read.delim(paste0('/Users/tanke/RStudio/CleanCounts.MouseAlignment_Sample',i,'_S0.txt'),header = TRUE, sep = '', dec = '.')
   MalayArray = read.delim(paste0('/Users/tanke/RStudio/CleanCounts_MalayRSEM_MouseAlignment_Sample',i,'.txt'),header = TRUE, sep = '', dec = '.')
@@ -27,3 +19,13 @@ for (i in 8:9){
           title = 'RNASeq Analysis Comparison'))
 }
 ```
+
+    ## Loading required package: ggplot2
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+<img src="Analysis-Comparison_files/figure-markdown_github/unnamed-chunk-1-1.png" width="50" height="50" />
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+<img src="Analysis-Comparison_files/figure-markdown_github/unnamed-chunk-1-2.png" width="50" height="50" />
