@@ -12,7 +12,8 @@ output:
 
 Download Mus Musculus genome from iGenome using wget, and then unzip
 (reference: https://www.interserver.net/tips/kb/extract-tar-gz-files-using-linux-command-line/)
-```{bash eval=FALSE, include=FALSE}
+
+```
 wget http://igenomes.illumina.com.s3-website-us-east-1.amazonaws.com/Mus_musculus/NCBI/GRCm38/Mus_musculus_NCBI_GRCm38.tar.gz
 tar xvzf Mus_musculus_NCBI_GRCm38.tar.gz
 ```
@@ -24,7 +25,8 @@ sjdbOverhang = sequence length - 1
 Warning: module purge at first, so that you can use STAR module
 
 FIXME: look for the newest conda version of STAR
-```{bash eval=FALSE, include=FALSE}
+
+```
 module load STAR/2.7.1a-foss-2016b; STAR --runThreadN 5 --runMode genomeGenerate --genomeDir GenomeIndices --genomeFastaFiles genome.fa --sjdbGTFfile genes.gtf --sjdbOverhang 100
 ```
 
@@ -33,7 +35,8 @@ Check the input (zipped or not!) and output!!
 Time: ~4min for one sample
 Output size: ~2GB
 module purge
-```{bash eval=FALSE, include=FALSE}
+
+```
 module load STAR/2.7.1a-foss-2016b; for i in {8,9}; do STAR --genomeDir GenomeIndices --runThreadN 20 --readFilesIn SeqData/${i}_R1_output_forward_paired.fq SeqData/${i}_R2_output_reverse_paired.fq --outFileNamePrefix ReadAlignment/Sample${i} --outSAMtype BAM SortedByCoordinate --outSAMattributes Standard; done
 ```
 
@@ -46,7 +49,8 @@ FIXME: module purge, but you need conda here...
 Time: ~20 seconds for one sample
 You don't need clusters here, but pay attention to threads
 s=0 is best here (Sarah's criteria, but why?)
-```{bash eval=FALSE, include=FALSE}
+
+```
 perl -ne 'chomp; @a=split/\t/; %h=split(/ /,$a[8]); $a[8]=join(" ",("gene_id",$h{"gene_id"},"transcript_id",$h{"transcript_id"})); print join("\t",@a),"\n";' genes.gtf > genes_fixed.gtf
 
 for j in {0,1,2}; do for i in {8,9}; do featureCounts -p -a genes_fixed.gtf -g gene_id -t exon -o FeatureCounts/FeatureCounts_Sample${i}_S${j}.txt -s ${j} -T 20 ReadAlignment/Sample${i}Aligned.sortedByCoord.out.bam; done; done
@@ -56,12 +60,12 @@ Clean up featurecount matrix for R plotting
 and manually remove the information at the beginning, and change header of count...
 there are 448 more lines than Malay's analysis due to transcript_id
 
-```{bash eval=FALSE, include=FALSE}
+```
 for i in {8,9}; do cut -f 1,7 FeatureCounts_Sample${i}_S0.txt > CleanFeatureCounts_Sample${i}_S0.txt; done
 for i in {8,9}; do grep -v 'transcript_id' CleanFeatureCounts_Sample${i}_S0.txt > CleanFeatureCounts_Sample${i}_S0_fixed.txt; done
 ```
 
-Comparison, using R
+## R for comparison and plotting
 
 ```{r echo=TRUE, out.height=50, out.width=50}
 for (i in 8:9){
@@ -78,7 +82,7 @@ for (i in 8:9){
           cor.coef = TRUE, cor.method = "pearson",
           cor.coef.size = 5,
           xlab = "Analysis1_Ke", ylab = "Analysis2_Malay",
-          title = 'RNASeq Analysis Comparison'))
+          title = paste0('RNASeq Analysis Comparison_Sample',i)))
 }
 ```
 
