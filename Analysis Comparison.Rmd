@@ -14,8 +14,6 @@ for (i in 8:9){
   KeArray = read.delim(paste0('/Users/tanke/RStudio/CleanCounts.MouseAlignment_Sample',i,'_S0.txt'),header = TRUE, sep = '', dec = '.')
   MalayArray = read.delim(paste0('/Users/tanke/RStudio/CleanCounts_MalayRSEM_MouseAlignment_Sample',i,'.txt'),header = TRUE, sep = '', dec = '.')
   InnerJoin <- dplyr::inner_join(KeArray,MalayArray,by='Geneid')
-  KeCount = InnerJoin[,2]
-  MalayCount = InnerJoin[,3]
   library("ggpubr")
   print(ggscatter(InnerJoin, x = "count.x", y = "count.y", 
           add = "reg.line", 
